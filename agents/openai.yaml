@@ -1,7 +1,7 @@
 interface:
   display_name: "Personalized Trip Planner"
-  short_description: "为多日旅行与自驾路线生成高质量个性化行程。"
-  default_prompt: "Use $personalized-trip-planner to help me plan a trip based on my dates, route, transport, stay pattern, and ranked travel preferences."
+  short_description: "先询问旅行背景，再筛选具体玩点，并可延展餐厅、酒店和项目推荐。"
+  default_prompt: "Use $personalized-trip-planner to help me plan a trip. Start by asking for my dates or trip length, arrival and departure points, pace, interests, lodging preferences, and things to avoid before listing specific candidate destinations, concrete things to see or do, and optional restaurant, hotel, or activity recommendation branches."
 
 policy:
   allow_implicit_invocation: true
