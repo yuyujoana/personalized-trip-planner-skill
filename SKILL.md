@@ -1,11 +1,11 @@
 ---
 name: personalized-trip-planner
-description: Use when the user wants to design a personalized travel itinerary, especially multi-day self-drive or city-hopping trips with fixed dates, fixed lodging nights, mixed priorities, and iterative route refinement. Helpful when the user wants candidate route options, attraction screening, day-by-day plans, map-oriented outputs, lodging-first planning, or a planning process that balances must-see highlights, niche world-class sights, pacing, and transport realities.
+description: Use when the user wants to design a personalized travel itinerary, especially multi-day self-drive or city-hopping trips with fixed dates, fixed lodging nights, mixed priorities, candidate destination screening, and iterative route refinement. Always starts by asking for enough trip context before listing destinations or planning. Helpful when the user wants a broad list of specific possible places, concrete things to see/do, sharp category labels, user-led filtering, route options, day-by-day plans, optional restaurant/hotel/activity recommendation branches, map-oriented outputs, lodging-first planning, or a planning process that balances must-see highlights, niche world-class sights, pacing, and transport realities.
 ---
 
 # Personalized Trip Planner
 
-Design travel plans the way a strong human trip partner would: gather the few facts that actually drive routing, propose route structures early, then tighten the plan through attraction screening, pacing checks, and output refinement.
+Design travel plans the way a strong human trip partner would: first ask for the facts that actually drive routing, then show the user the realistic candidate universe, let them filter it, and tighten the plan through route logic, pacing checks, and output refinement.
 
 This skill is especially useful for users who:
 - already know some places they care about
@@ -17,20 +17,73 @@ This skill is especially useful for users who:
 
 Do not jump straight into a perfect final itinerary.
 
+Do not jump straight into a candidate attraction list either when the user has only named a destination. The first response must ask for trip context.
+
 Work in layers:
 1. collect the trip skeleton
 2. collect preferences and hard constraints
-3. screen attractions aggressively
-4. propose 2-4 route logics if tradeoffs exist
-5. lock overnight structure
-6. refine into day-by-day execution
-7. convert into tables, cards, or map outputs if requested
+3. present a broad candidate list of destinations, attractions, concrete see/do points, and categories
+4. ask the user to keep / cut / mark maybe / add places
+5. screen and rank the shortlist after the user's feedback
+6. propose 2-4 route logics if tradeoffs exist
+7. lock overnight structure
+8. refine into day-by-day execution
+9. offer optional recommendation branches for restaurants, hotels, or bookable activities if those details are still missing
+10. integrate selected recommendations back into the plan
+11. convert into tables, cards, or map outputs if requested
 
 The user should feel that the route is being *curated*, not merely assembled.
 
+## Confirmation gates
+
+The default interaction should be staged. Unless the user explicitly asks for a final itinerary immediately, do not present a polished final plan before the user has had a chance to inspect and edit the candidate list.
+
+Use these gates:
+
+1. **Input gate**: collect the trip skeleton, constraints, and ranked preferences.
+2. **Candidate gate**: show the likely destination / attraction universe in a clear list or table.
+3. **Selection gate**: ask the user which places are keep / cut / maybe, and whether anything is missing.
+4. **Route gate**: only after selection, propose route structures and tradeoffs.
+5. **Execution gate**: only after route or overnight structure is accepted, produce day-by-day details.
+6. **Extension gate**: after the core plan, offer optional detail branches such as restaurants, hotels, and bookable activities.
+
+If the destination is broad or unfamiliar, the candidate gate is especially important. The user often needs to understand what exists before they can express what they want.
+
 ## What to collect first
 
-If the user has not already provided them, try to collect these inputs early:
+The first step is mandatory question asking.
+
+If the user only provides a destination, or provides a destination plus vague intent such as “plan a trip,” “make an itinerary,” or “help me travel,” do not list attractions, do not propose route options, and do not create a draft itinerary yet. Ask for the missing planning inputs first.
+
+Ask a compact set of questions that gives enough detail to proceed. Prefer 5-7 questions, grouped so the user can answer quickly. Include examples or choices where helpful.
+
+Minimum useful input before moving to the candidate list:
+- trip length or exact dates
+- arrival / departure city or airport if known
+- travel party and basic constraints
+- preferred pace
+- top interests or ranked preference categories
+- lodging style or whether lodging is already fixed
+- major dislikes or things to avoid
+
+If the user has already provided most of this, ask only for the missing fields that meaningfully affect routing.
+
+Good first response shape:
+
+“可以，我先问几个会真正影响路线的问题。你回答完后，我再给你候选目的地 / 玩点清单，让你筛选。”
+
+Then ask:
+1. dates or number of days
+2. arrival / departure point and rough flight times
+3. who is traveling and any mobility / family / budget constraints
+4. preferred pace: relaxed / balanced / full
+5. ranked interests
+6. lodging preference or fixed hotel nights
+7. things to avoid
+
+After the user answers these, summarize the trip frame briefly and move to the candidate gate.
+
+Collect these inputs early:
 
 ### Trip frame
 - arrival city / airport
@@ -77,6 +130,26 @@ Useful buckets:
 
 Do not treat all attractions equally.
 
+Before cutting too aggressively, first expose the candidate pool so the user can participate in the cut. The first screening output should include both obvious classics and plausible niche / regional options, grouped by category or geography. After the user reacts, become more selective.
+
+Make candidate items specific enough that the user can make a real choice. Avoid vague entries like “old town,” “beach,” “food,” or “nature” without naming what the user would actually see or do there.
+
+For each meaningful candidate, include:
+- the specific place or experience name
+- the concrete see/do point, such as a street, viewpoint, dish, trail, building, market, museum room, beach segment, boat type, or spa branch
+- why it is distinctive, not just why it is pleasant
+- who it fits and who should skip it
+- whether it is a main anchor, a good add-on, or only worth doing if nearby
+
+Good candidate writing:
+- “Phuket Old Town: Thalang Road / Soi Romanee shophouses, Baba-Peranakan food, and restored Sino-Portuguese facades; best as a cafe-and-lunch half day, not a full sightseeing day.”
+- “Bang Pae Waterfall: light rainforest stop near the northeast side of Phuket; choose it for a soft nature reset, not for a dramatic waterfall.”
+
+Weak candidate writing:
+- “Visit old town for culture.”
+- “Go to the beach and relax.”
+- “Try local food.”
+
 Screen each place against these questions:
 - Is it world-class or merely good?
 - Is it distinctive for this destination?
@@ -100,6 +173,12 @@ Screen each place against these questions:
 
 ## Preferred planning sequence
 
+When the user only names a destination:
+1. acknowledge the destination
+2. ask the mandatory first-step questions
+3. stop there and wait for answers
+4. do not include an attraction table in that first reply
+
 When the trip is still open:
 1. summarize what the user wants in plain language
 2. identify the trip's real tension points:
@@ -107,8 +186,20 @@ When the trip is still open:
    - museums vs scenery
    - classic vs niche
    - rest vs coverage
-3. propose a small number of route structures
-4. explain each structure in human terms, not just logistics
+3. present the candidate destination / attraction list before proposing a final route
+4. ask the user to filter the list
+5. propose a small number of route structures after the user has reacted
+6. explain each structure in human terms, not just logistics
+
+When presenting the candidate list:
+1. group places by region, city, or route cluster
+2. include category labels such as archaeology, museum, landscape, coast, food, local life, rare / niche, family-friendly, rest
+3. name the concrete see/do point inside each place
+4. mark a provisional priority such as must-consider / strong / optional / niche
+5. give one sharp reason each place matters
+6. say what kind of traveler should skip it when relevant
+7. avoid sounding like the list is already the final plan
+8. end by asking the user to choose keep / cut / maybe, or to rank the categories
 
 When the user begins locking nights:
 1. accept the stay structure as the new backbone
@@ -126,14 +217,44 @@ When the user wants execution detail:
 
 Choose the output shape that matches the user's stage.
 
+### First-step intake
+Use this when the user has not provided enough trip detail yet.
+
+Ask questions only. Do not provide:
+- attraction lists
+- route options
+- day-by-day plans
+- hotel area recommendations
+
+Keep the question set compact and practical. The goal is to get enough signal to build a useful candidate list next.
+
 ### Early-stage destination screening
+Use this before route planning when the user is still deciding what belongs in the trip. This is not a final itinerary.
+
+Only use this after the first-step intake has enough answers to understand the user's trip frame and preferences.
+
 Use a table like:
 - location
 - category
 - attraction
-- why it matters
+- concrete see/do point
+- why it matters in one sharp line
+- best for / skip if
+- provisional priority
+- keep / cut / maybe status if the user is editing the list
 - distance / direction from anchor city if helpful
 - search link if requested
+
+For broad trips, split the screening table into:
+- core classics
+- strong regional additions
+- niche / unusual candidates
+- optional fillers or weather-dependent stops
+
+End this output with a direct selection prompt, for example:
+"Pick the places you definitely want, places you want to remove, and any maybes. After that I will turn the shortlist into route options."
+
+Do not overload the candidate table with generic filler. If an item cannot be described with a concrete see/do point, merge it into another item or omit it.
 
 ### Comparing route strategies
 Use 2-4 labeled route options.
@@ -158,6 +279,60 @@ Use a table with:
 - route and navigation distances
 - morning / midday / evening sequence
 - the actual attractions in order
+- open detail slots such as meals, hotel names, or bookable activities when those are not decided yet
+
+Only produce this once the user has accepted either:
+- the attraction shortlist
+- the route option
+- the overnight structure
+
+If those are not accepted yet, provide a draft route structure or candidate shortlist instead of a final day-by-day plan.
+
+If the user has not provided restaurant, hotel, or detailed bookable activity preferences, do not invent overly specific final choices inside the core plan. Mark those as open slots and offer optional recommendation branches next.
+
+### Optional recommendation branches
+Use this after the core route or day-by-day plan when important details are still undecided.
+
+Offer exactly these three optional branches unless the user has already asked for one:
+1. restaurant recommendations
+2. hotel recommendations
+3. activity / experience recommendations
+
+Phrase it as a choice, not a requirement. For example:
+"The route skeleton is now workable. I can extend it in three optional directions: restaurant recommendations, hotel recommendations, or bookable activity recommendations. Which one do you want to refine first?"
+
+When the user chooses a branch, do not immediately dump recommendations unless their preferences are already clear. Ask branch-specific intake questions first.
+
+Restaurant branch intake:
+- budget level and whether fine dining is desired
+- cuisine preferences and dietary restrictions
+- preferred meal types: beach cafe, local institution, tasting menu, street food, casual dinner, sunset restaurant
+- tolerance for driving / reservations / queues
+- meals to fill in the itinerary
+
+Hotel branch intake:
+- budget per night or hotel tier
+- beach area / neighborhood preference
+- must-have facilities, such as yoga, tennis, kids club, pool villa, spa, beach access, parking
+- tolerance for remoteness versus restaurant access
+- whether one hotel or split stay is acceptable
+
+Activity branch intake:
+- activity type: wellness, light hiking, culture, food tour, cooking class, workshop, photography, shopping, adventure
+- physical intensity and time budget
+- weather flexibility
+- private versus group preference
+- booking comfort and cancellation flexibility
+
+After the user answers a branch intake, recommend a compact shortlist with:
+- option name
+- why it fits this itinerary
+- best day / time slot to place it
+- tradeoff or reason to skip
+- booking or verification note if current availability matters
+
+After the user selects one or more recommendations, explicitly offer to integrate them back into the master plan:
+"I can now fold these choices back into the day-by-day plan and adjust timing around them."
 
 ### Map / visual handoff
 If the user later wants visuals, the planning text should already be structured so it can cleanly convert into:
@@ -227,9 +402,27 @@ Common pattern:
 4. fix sleep cities
 5. re-rank attractions
 6. refine day plans
-7. convert to tables / visuals
+7. optionally refine restaurants, hotels, or bookable activities
+8. integrate selected details into the master plan
+9. convert to tables / visuals
 
 Treat later user choices as more important than earlier broad statements.
+
+When the user edits the candidate list, reflect the updated state back before moving on:
+- confirmed keeps
+- confirmed cuts
+- unresolved maybes
+- route implications of those choices
+
+Then ask whether to proceed to route options or continue screening.
+
+When the user works inside a recommendation branch, keep track of the branch state:
+- what preferences were collected
+- which options were recommended
+- which options the user accepted, rejected, or marked maybe
+- which day / location each accepted option belongs to
+
+When a branch has enough selected details, guide the user back to the master plan instead of continuing to produce isolated recommendations.
 
 ## Practical follow-up questions that are worth asking
 
@@ -244,6 +437,7 @@ Do not ask broad, vague questions the user has effectively already answered.
 ## Final deliverable checklist
 
 Before presenting a final itinerary, check that it:
+- follows at least one user confirmation step unless the user explicitly requested an immediate final plan
 - respects fixed dates and flight times
 - respects fixed overnight cities
 - matches the user's top-ranked interests
@@ -252,6 +446,10 @@ Before presenting a final itinerary, check that it:
 - clearly states where the user sleeps each night
 - includes route distances if requested
 - uses concise, concrete highlight language
+- uses specific attraction / experience descriptions, not generic labels
+- clearly marks undecided restaurants, hotels, and activities as open slots
+- offers optional recommendation branches if restaurants, hotels, or bookable activities are still missing
+- integrates accepted branch recommendations back into the day-by-day plan
 
 ## Good default mindset
 
